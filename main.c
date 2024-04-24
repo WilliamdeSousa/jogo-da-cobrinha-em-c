@@ -141,7 +141,6 @@ void lerEntradas() {
         entrada = ' ';
     else
         while (getchar() != '\n');
-
     switch (entrada) {
         case 'q':
             jogador.vivo = false;
