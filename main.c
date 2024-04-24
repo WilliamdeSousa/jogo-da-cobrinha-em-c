@@ -122,7 +122,7 @@ void renderizarJogo() {
 
     calcularColisoes();
 
-    system("clear" );
+//    system("clear" );
 
     limparTabuleiro();
 
@@ -134,7 +134,13 @@ void renderizarJogo() {
 
 void lerEntradas() {
     char entrada;
+
     entrada = getchar();
+
+    if (entrada == '\n')
+        entrada = ' ';
+    else
+        while (getchar() != '\n');
 
     switch (entrada) {
         case 'q':
