@@ -1,3 +1,0 @@
-/home/william/CLionProjects/jogo da cobrinha ed/cmake-build-debug/CMakeFiles/jogo_da_cobrinha_ed.dir
-/home/william/CLionProjects/jogo da cobrinha ed/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/william/CLionProjects/jogo da cobrinha ed/cmake-build-debug/CMakeFiles/rebuild_cache.dir
