@@ -65,7 +65,6 @@ build CMakeFiles/jogo_da_cobrinha_ed.dir/main.c.o: C_COMPILER__jogo_da_cobrinha_
 
 build jogo_da_cobrinha_ed: C_EXECUTABLE_LINKER__jogo_da_cobrinha_ed_Debug CMakeFiles/jogo_da_cobrinha_ed.dir/main.c.o
   FLAGS = -g
-  LINK_LIBRARIES = -lncurses  -ltinfo
   OBJECT_DIR = CMakeFiles/jogo_da_cobrinha_ed.dir
   POST_BUILD = :
   PRE_LINK = :

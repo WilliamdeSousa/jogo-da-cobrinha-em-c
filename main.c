@@ -20,7 +20,7 @@ typedef int bool;
 typedef struct {
     int x;
     int y;
-} POSICAO;
+} VETOR;
 
 typedef struct {
     char caracter;
@@ -28,8 +28,9 @@ typedef struct {
 } CARACTER;
 
 typedef struct {
-    POSICAO cabeca;
-    POSICAO corpo[AREA_TELA - 1];
+    VETOR cabeca;
+    VETOR corpo[AREA_TELA - 1];
+    VETOR movimento;
     int tamanhoCorpo;
     bool vivo;
 } COBRINHA;
@@ -39,32 +40,44 @@ CARACTER CARACTER_CORPO = {'o', COR_COBRA};
 CARACTER CARACTER_CABECA = {'0', COR_COBRA};
 CARACTER CARACTER_ESPACO = {' ', COR_NULA};
 
+VETOR DIRECAO_ESQUERDA = {-1, 0};
+VETOR DIRECAO_DIREITA = {1, 0};
+VETOR DIRECAO_CIMA = {0, -1};
+VETOR DIRECAO_BAIXO = {0, 1};
+
 COBRINHA jogador;
-POSICAO comidas[QUANTIDADE_MAXIMA_COMIDAS];
+VETOR comidas[QUANTIDADE_MAXIMA_COMIDAS];
 int quantidadeDeComidas = 1;
 
 CARACTER tabuleiro[ALTURA][LARGURA];
 
 // cabeçalhos
 void iniciarJogo();
+void perderJogo();
 void renderizarJogo();
+void atualizarCorpo();
+
 void lerEntradas();
-void moverDireita();
-void moverEsquerda();
-void moverCima();
-void moverBaixo();
+void virarDireita();
+void virarEsquerda();
+void virarCima();
+void virarBaixo();
+void moverCobrinha();
+
 void colocarCobrinha();
 void colocarComida();
-void colocarCharNoTabuleiro(CARACTER, POSICAO);
+void colocarCaracter(CARACTER, VETOR);
+
 void limparTabuleiro();
 void mostrarTabuleiro();
-void linha();
-void mostrar(CARACTER, char*);
-void perder();
+void mostrarLinha();
+void mostrarCaracter(CARACTER, char*);
+
 void adicionarComida();
-void calcularColisoes();
 void sortearPosicaoComida(int);
 void comerComida(int);
+
+void calcularColisoes();
 bool colidiuComComida(int);
 bool colidiuComCorpo();
 bool colidiuComParedes();
@@ -86,6 +99,8 @@ void iniciarJogo() {
 
     jogador.cabeca.x = LARGURA / 2;
     jogador.cabeca.y = ALTURA / 2;
+    jogador.movimento.x = -1;
+    jogador.movimento.y = 0;
     jogador.tamanhoCorpo = 0;
     jogador.vivo = true;
 
@@ -96,7 +111,15 @@ void iniciarJogo() {
 
 }
 
+void moverCobrinha() {
+    atualizarCorpo();
+    jogador.cabeca.x += jogador.movimento.x;
+    jogador.cabeca.y += jogador.movimento.y;
+}
+
 void renderizarJogo() {
+    moverCobrinha();
+
     calcularColisoes();
 
     system("clear" );
@@ -111,23 +134,23 @@ void renderizarJogo() {
 
 void lerEntradas() {
     char entrada;
-    scanf(" %c", &entrada);
+    entrada = getchar();
 
     switch (entrada) {
         case 'q':
             jogador.vivo = false;
             break;
         case 'a':
-            moverEsquerda();
+            virarEsquerda();
             break;
         case 'd':
-            moverDireita();
+            virarDireita();
             break;
         case 'w':
-            moverCima();
+            virarCima();
             break;
         case 's':
-            moverBaixo();
+            virarBaixo();
             break;
     }
 }
@@ -142,10 +165,10 @@ void calcularColisoes() {
         }
 
     if (colidiuComCorpo())
-        perder();
+        perderJogo();
 
     if (colidiuComParedes())
-        perder();
+        perderJogo();
 }
 
 bool colidiuComComida(int indice) {
@@ -163,7 +186,7 @@ bool colidiuComParedes() {
     );
 }
 
-void perder() {
+void perderJogo() {
     printf("GAME OVER!\n");
     jogador.vivo = false;
     exit(0);
@@ -195,17 +218,17 @@ void sortearPosicaoComida(int indice) {
 
 void colocarComida() {
     for (int i = 0; i < quantidadeDeComidas; i++)
-        colocarCharNoTabuleiro(CARACTER_COMIDA, comidas[i]);
+        colocarCaracter(CARACTER_COMIDA, comidas[i]);
 }
 
 void colocarCobrinha() {
     for (int i = 0; i < jogador.tamanhoCorpo; i++)
-        colocarCharNoTabuleiro(CARACTER_CORPO, jogador.corpo[i]);
+        colocarCaracter(CARACTER_CORPO, jogador.corpo[i]);
 
-    colocarCharNoTabuleiro(CARACTER_CABECA, jogador.cabeca);
+    colocarCaracter(CARACTER_CABECA, jogador.cabeca);
 }
 
-void colocarCharNoTabuleiro(CARACTER caracter, POSICAO posicao) {
+void colocarCaracter(CARACTER caracter, VETOR posicao) {
     if ((posicao.x >= 0 && posicao.x < LARGURA) && (posicao.y >= 0 && posicao.y < ALTURA))
         tabuleiro[posicao.y][posicao.x] = caracter;
 }
@@ -217,24 +240,28 @@ void atualizarCorpo() {
     jogador.corpo[0] = jogador.cabeca;
 }
 
-void moverDireita() {
-    atualizarCorpo();
-    jogador.cabeca.x++;
+bool naoEstaMovendoPara(VETOR direcao) {
+    return (jogador.movimento.x != direcao.x || jogador.movimento.y != direcao.y);
 }
 
-void moverEsquerda() {
-    atualizarCorpo();
-    jogador.cabeca.x--;
+void virarDireita() {
+    if (naoEstaMovendoPara(DIRECAO_ESQUERDA))
+        jogador.movimento = DIRECAO_DIREITA;
 }
 
-void moverCima() {
-    atualizarCorpo();
-    jogador.cabeca.y--;
+void virarEsquerda() {
+    if (naoEstaMovendoPara(DIRECAO_DIREITA))
+        jogador.movimento = DIRECAO_ESQUERDA;
 }
 
-void moverBaixo() {
-    atualizarCorpo();
-    jogador.cabeca.y++;
+void virarCima() {
+    if (naoEstaMovendoPara(DIRECAO_BAIXO))
+        jogador.movimento = DIRECAO_CIMA;
+}
+
+void virarBaixo() {
+    if (naoEstaMovendoPara(DIRECAO_CIMA))
+        jogador.movimento = DIRECAO_BAIXO;
 }
 
 void limparTabuleiro() {
@@ -246,33 +273,33 @@ void limparTabuleiro() {
 void mostrarTabuleiro() {
     CARACTER barraLateral = {'|', COR_INTERFACE};
 
-    linha();
+    mostrarLinha();
 
     for (int i = 0; i < ALTURA; i++) {
-        mostrar(barraLateral, " ");
+        mostrarCaracter(barraLateral, " ");
 
         for (int j = 0; j < LARGURA; j++) {
-            mostrar(tabuleiro[i][j], " ");
+            mostrarCaracter(tabuleiro[i][j], " ");
         }
 
-        mostrar(barraLateral, "\n");
+        mostrarCaracter(barraLateral, "\n");
     }
 
-    linha();
+    mostrarLinha();
 }
 
-void linha() {
+void mostrarLinha() {
     CARACTER mais = {'+', COR_INTERFACE};
     CARACTER menos = {'-', COR_INTERFACE};
 
-    mostrar(mais, "");
+    mostrarCaracter(mais, "");
 
     for (int i = 0; i < LARGURA * 2 + 1; i++)
-        mostrar(menos, "");
+        mostrarCaracter(menos, "");
 
-    mostrar(mais, "\n");
+    mostrarCaracter(mais, "\n");
 }
 
-void mostrar(CARACTER caracter, char *posfixo) {
+void mostrarCaracter(CARACTER caracter, char *posfixo) {
     printf("%s%c%s%s", caracter.cor, caracter.caracter, posfixo, RESETAR_COR);
 }
