@@ -122,7 +122,7 @@ void renderizarJogo() {
 
     calcularColisoes();
 
-//    system("clear" );
+    system("clear" );
 
     limparTabuleiro();
 
