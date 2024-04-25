@@ -20,7 +20,7 @@ E para executar o jogo utilize o comando:
 ## Objetivo Principal:
 Desenvolver o jogo da cobrinha utilizando as bibliotecas padrões da linguagem C e utilizando o conceito de lista com vetor (array). 
 
-A lista está implementado tanto dentro da struct "COBRINHA", no campo "corpo" e "tamanhoCorpo", quando em funções paralelas no código. 
+A lista está implementado tanto dentro da struct "LISTA", no campo "vetor" e "tamanhoAtual", quando em funções paralelas no código. 
 
 ## Obejteivos Secundários:
 - [x] Múltiplas Comidas no mapa
