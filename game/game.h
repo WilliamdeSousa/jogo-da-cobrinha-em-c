@@ -5,8 +5,8 @@
 
 // cabeçalhos
 void rodar();
-void perderJogo();
 void ganharJogo();
+void perderJogo();
 void renderizarJogo();
 
 void lerEntradas();
