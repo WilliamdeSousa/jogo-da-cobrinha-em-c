@@ -2,17 +2,12 @@
 #define JOGO_DA_COBRINHA_ED_LOCALS_H
 
 #include "lista.h"
+#include "cores.h"
 
 #define LARGURA_CENARIO 17
 #define ALTURA_CENARIO 11
 #define TAMANHO_MAXIMO_COBRINHA (ALTURA_CENARIO * LARGURA_CENARIO)
 #define TAMANHO_INICIAL_COBRINHA 3
-
-#define COR_NULA ""
-#define COR_INTERFACE "\x1b[1;37m"
-#define COR_COMIDA "\x1b[1;31m"
-#define COR_COBRA "\x1b[1;32m"
-#define RESETAR_COR "\x1b[1;0m"
 
 typedef int BOOL;
 #define true 1
