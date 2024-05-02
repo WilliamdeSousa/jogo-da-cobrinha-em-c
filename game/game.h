@@ -17,7 +17,7 @@ void virarBaixo();
 void moverCobrinha();
 
 void colocarCobrinha();
-void colocarComidas();
+void colocarComida();
 void colocarCaracter(CARACTER, PONTO);
 
 void limparCenario();
@@ -26,10 +26,10 @@ void mostrarLinha();
 void mostrarCaracter(CARACTER, char*);
 
 PONTO sortearPosicao();
-void comerComida(int);
+void comerComida();
 
 void calcularColisoes();
-BOOL colidiuComComida(int);
+BOOL colidiuComComida();
 BOOL colidiuComCorpo();
 BOOL colidiuComParedes();
 

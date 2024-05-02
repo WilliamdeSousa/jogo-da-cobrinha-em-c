@@ -2,7 +2,7 @@
 
 // variaveis
 LISTA cobrinha;
-LISTA comidas;
+PONTO comida;
 DIRECAO direcaoCobrinha;
 BOOL cobrinhaViva;
 
@@ -15,32 +15,28 @@ void rodar() {
 
     cobrinha = criarLista(TAMANHO_INICIAL_COBRINHA, TAMANHO_MAXIMO_COBRINHA);
     direcaoCobrinha = ESQUERDA;
+
     cobrinhaViva = true;
 
     cobrinha.vetor[0] = POSICAO_INICIAL;
 
-    for (int i = 0; i < TAMANHO_INICIAL_COBRINHA - 1; i++)
+    for (int i = 0; i < TAMANHO_INICIAL_COBRINHA; i++)
         moverCobrinha();
 
-    comidas = criarLista(QUANTIDADE_INICIAL_COMIDAS, QUANTIDADE_MAXIMA_COMIDAS);
     colocarCobrinha();
 
-    // pretendo adicionar um arquivo para modificações, podendo mudar a quantidade de comidas iniciais, máximas, etc
-    // se só tivesse uma sempre poderia simplesmente usar: sortearPosicao(0);
-
-    for (int i = 0; i < comidas.tamanhoAtual; i++)
-        comidas.vetor[i] = sortearPosicao();
+    comida = sortearPosicao();
 
     while (cobrinhaViva) {
         renderizarJogo();
 
         lerEntradas();
+
+        moverCobrinha();
     }
 }
 
 void renderizarJogo() {
-    moverCobrinha();
-
     calcularColisoes();
 
     system("clear");
@@ -49,7 +45,7 @@ void renderizarJogo() {
 
     colocarCobrinha();
 
-    colocarComidas();
+    colocarComida();
 
     mostrarCenario();
 }
@@ -107,10 +103,8 @@ void calcularColisoes() {
     if (colidiuComCorpo() || colidiuComParedes())
         perderJogo();
 
-    for (int i = 0; i < comidas.tamanhoAtual; i++)
-        if (colidiuComComida(i)) {
-            comerComida(i);
-        }
+    if (colidiuComComida())
+        comerComida();
 }
 
 BOOL colidiuComCorpo() {
@@ -125,32 +119,22 @@ BOOL colidiuComParedes() {
     );
 }
 
-BOOL colidiuComComida(int indice) {
-    if (cobrinha.vetor[0].y == comidas.vetor[indice].y) {
-        return cobrinha.vetor[0].x == comidas.vetor[indice].x;
-    } else {
-        return false;
-    }
+BOOL colidiuComComida() {
+    return cobrinha.vetor[0].x == comida.x && cobrinha.vetor[0].y == comida.y;
 }
 
-void comerComida(int indice) {
+void comerComida() {
     adicionarElemento(&cobrinha, cobrinha.vetor[cobrinha.tamanhoAtual]);
 
     if (cobrinha.tamanhoAtual == cobrinha.tamanhoMaximo)
         ganharJogo();
 
-    comidas.vetor[indice] = sortearPosicao();
-
-    if (cobrinha.tamanhoAtual % PASSO_AUMENTAR_COMIDA == 0) {
-        if (cobrinha.tamanhoAtual < MEIO_JOGO)
-            adicionarElemento(&comidas, sortearPosicao());
-        else
-            removerElemento(&comidas, indice);
-    }
+    comida = sortearPosicao();
 }
 
 PONTO sortearPosicao() {
     PONTO ponto;
+    srand(time(NULL));
 
     do {
         ponto.x = rand() % LARGURA_CENARIO;
@@ -167,9 +151,8 @@ void limparCenario() {
             cenario[i][j] = ESPACO;
 }
 
-void colocarComidas() {
-    for (int i = 0; i < comidas.tamanhoAtual; i++)
-        colocarCaracter(COMIDA, comidas.vetor[i]);
+void colocarComida() {
+    colocarCaracter(COMIDA, comida);
 }
 
 void colocarCobrinha() {
@@ -180,8 +163,7 @@ void colocarCobrinha() {
 }
 
 void colocarCaracter(CARACTER caracter, PONTO posicao) {
-    if ((posicao.x >= 0 && posicao.x < LARGURA_CENARIO) && (posicao.y >= 0 && posicao.y < ALTURA_CENARIO))
-        cenario[posicao.y][posicao.x] = caracter;
+    cenario[posicao.y][posicao.x] = caracter;
 }
 
 // DIREÇÕES
