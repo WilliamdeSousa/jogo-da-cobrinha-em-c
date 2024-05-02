@@ -14,4 +14,3 @@ A lista está implementado tanto dentro da struct "LISTA", no campo "vetor" e "t
 - [x] Modularização do Código
 - [x] Adicionar Cores (Implementado com ASCI Escope Codes)
 - [x] Organização e separação do código em arquivos
-- [ ] Criações de Menus para melhor interação com o Terminal
