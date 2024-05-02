@@ -17,6 +17,5 @@ typedef struct {
 
 LISTA criarLista(int, int);
 void adicionarElemento(LISTA *, PONTO);
-void removerElemento(LISTA *, int);
 
 #endif // JOGO_DA_COBRINHA_ED_LISTA_H

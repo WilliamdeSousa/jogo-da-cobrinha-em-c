@@ -14,10 +14,3 @@ void adicionarElemento(LISTA *lista, PONTO ponto) {
         lista->tamanhoAtual++;
     }
 }
-
-void removerElemento(LISTA *lista, int indice) {
-    if (lista->tamanhoAtual == 1)
-        return;
-    lista->tamanhoAtual--;
-    lista->vetor[indice] = lista->vetor[lista->tamanhoAtual];
-}
