@@ -6,6 +6,7 @@ Ministrada pelo Professor Victor André Oliveira no semestre de 2024.1.
 Código feito para rodar inicialmente no Terminal Unix. Desenvolvido no Pop OS 22.04, distribuição Linux inspirada no Ubuntu 22.04.
 
 [Vídeo demonstração](https://youtu.be/kCtWzqUX-U0?si=wc-IpQ0fwnOvhf0Y)
+
 [Execute online no Replit](https://replit.com/@Williamdesousa/jogo-da-cobrinha)
 
 ## Objetivo Principal:
